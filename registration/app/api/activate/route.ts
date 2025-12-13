@@ -1,4 +1,5 @@
 import { getDB } from "@/db";
+import {NextResponse} from "next/server";
 
 interface DBUser {
     id: number;
@@ -40,10 +41,12 @@ export async function GET(req: Request) {
             user.id
         );
 
-        return new Response(
-            `<h1>Account activated!</h1><p>You may now log in.</p>`,
-            { status: 200, headers: { "Content-Type": "text/html" } }
-        );
+        // return new Response(
+        //     `<h1>Account activated!</h1><p>You may now log in.</p>`,
+        //     { status: 200, headers: { "Content-Type": "text/html" } }
+        // );
+        return NextResponse.redirect("http://localhost:3000/login");
+
     } catch (err) {
         console.error(err);
         return new Response("Internal server error", { status: 500 });

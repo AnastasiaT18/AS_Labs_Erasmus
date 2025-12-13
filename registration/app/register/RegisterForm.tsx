@@ -6,6 +6,7 @@ export default function RegisterForm() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordConfirm, setPasswordConfirm] = useState("");
     const [email, setEmail] = useState("");
 
     const [error, setError] = useState<string | null>(null);
@@ -17,6 +18,7 @@ export default function RegisterForm() {
         if (username.length < 2) return "Username must be at least 2 characters.";
         if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return "Invalid email.";
         if (password.length < 8) return "Password must be at least 8 characters.";
+        if (passwordConfirm != password) return "Passwords do not match. Try again.";
 
         return null;
     };
@@ -55,6 +57,8 @@ export default function RegisterForm() {
                setUsername("");
                setEmail("");
                setPassword("");
+
+
            }
         }catch(err){
             setError("Network error: " + err);
@@ -100,6 +104,18 @@ export default function RegisterForm() {
                 />
             </div>
 
+            {/* PASSWORD CONFIRMATION */}
+            <div className="flex flex-col mt-5">
+                <label className="font-medium mb-1 text-black">Password Confirmation</label>
+                <input
+                    type="password"
+                    className="w-full p-3 border rounded-lg focus:ring-2 text-gray-700"
+                    value={passwordConfirm}
+                    onChange={(e) => setPasswordConfirm(e.target.value)}
+                    placeholder="Password"
+                />
+            </div>
+
             {error && <p className="text-red-600 text-sm">{error}</p>}
             {success && <p className="text-green-600 text-sm">{success}</p>}
 
@@ -111,6 +127,16 @@ export default function RegisterForm() {
             >
                 {loading ? "Registering..." : "Register"}
             </button>
+
+            <div className="text-black mt-3 width flex justify-center">
+                Already have an account?
+                <button
+                    onClick={() => window.location.href = "/login"}
+                    className="text-black hover:text-blue-800 hover:underline cursor-pointer"
+                >
+                     Log in here.
+                </button>
+            </div>
 
         </form>
 
