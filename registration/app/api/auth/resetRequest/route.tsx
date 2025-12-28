@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {getDB} from "@/db";
-import {getToken} from "@/app/api/register/token";
-import {transporter} from "@/app/api/register/email";
+import {getToken} from "@/app/api/auth/register/token";
+import {transporter} from "@/app/api/auth/register/email";
 
 
 function validateUserInput(email: string) {
@@ -16,6 +16,7 @@ export async function POST(req: Request) {
 
     try{
 
+        console.log("hey,", req.body)
         const body = await req.json();
         const email = body.email;
 

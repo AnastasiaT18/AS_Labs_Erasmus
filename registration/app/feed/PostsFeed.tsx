@@ -1,0 +1,102 @@
+"use client"
+
+import {useEffect, useState} from "react";
+import CreateCommentForm from "@/app/components/CreateCommentForm";
+import CommentsFeed from "@/app/components/CommentsFeed";
+
+type Post = {
+    id: number;
+    content: string;
+    image_path: string | null;
+    author_name: string;
+    created_at: string;
+};
+
+type Props = {
+    user: { id: number; name: string; email: string; role: string } | null;
+};
+
+export default function PostsFeed({ user }: Props) {
+
+    const [posts, setPosts] = useState<Post[]>([]);
+
+    async function loadPosts() {
+        const res = await fetch("/api/posts/list");
+        const posts = await res.json();
+        setPosts(posts);
+    }
+
+    async function deletePost(id: number) {
+        if (!confirm("Are you sure you want to delete this post?")) return;
+
+        const res = await fetch(`/api/posts/delete`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ postId: id }),
+        });
+
+        if (res.ok) {
+            // remove deleted post from state
+            loadPosts()
+            console.log("Deleting the post")
+        } else {
+            const data = await res.json();
+            alert(data.error || "Failed to delete post.");
+        }
+    }
+
+    useEffect(() => {
+        loadPosts();
+    }, []);
+
+
+    return (
+        <div className="space-y-6">
+            {posts.map((post) => (
+                <div
+                    key={post.id}
+                    className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
+                >
+                    {/* Author and timestamp */}
+                    <div className="flex justify-between items-center mb-2">
+                        <span className="font-semibold text-gray-800">
+                          {post.author_name}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {new Date(post.created_at).toLocaleString()}
+                        </span>
+                    </div>
+
+                    {/* Content */}
+                    <p className="text-gray-700 mb-2 whitespace-pre-wrap">{post.content}</p>
+
+                    {/* Image */}
+                    {post.image_path && (
+                        <img
+                            src={post.image_path}
+                            alt="post"
+                            className="w-full rounded-lg object-cover max-h-80"
+                        />
+                    )}
+
+                    {/* Comments */}
+                    <CommentsFeed postId={post.id} user={user}/>
+
+                    {/* Comment form */}
+                    {user && <CreateCommentForm postId={post.id}/>}
+
+
+                    {/* Other buttons (including delete) */}
+                    {(user?.role === "admin" || user?.name === post.author_name) && (
+                        <button
+                            type="submit"
+                            onClick={() => deletePost(post.id)}
+                            className="bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition font-medium"
+                        >
+                            Delete
+                        </button>)}
+                </div>
+            ))}
+        </div>
+    );
+}

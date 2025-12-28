@@ -14,12 +14,12 @@ export default function LogoutButton() {
     const handleLogout = async ()=>{
         setLoading(true);
         try{
-            const res = await fetch("/api/logout", {
+            const res = await fetch("/api/auth/logout", {
                 method: "POST",
             });
 
             if(res.ok){
-                router.push("/login"); // redirect to login
+                router.push("/feed"); // redirect to login
             }
             else {
                 console.error("Logout failed");

@@ -14,16 +14,31 @@ export default function LoginForm() {
     const [loading, setLoading] = useState(false);
 
 
+    const validate = () => {
+        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return "Invalid email.";
+        if (password.length < 8) return "Password must be at least 8 characters.";
+
+        return null;
+    };
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         console.log("Submitting...");
+
+        const validation = validate();
+        if (validation) {
+            setError(validation);
+            setSuccess(null);
+            console.log(error);
+            return;
+        }
 
         setLoading(true);
         setError(null);
         setSuccess(null);
 
         try{
-            const res = await fetch("/api/login", {
+            const res = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({email, password})
@@ -38,7 +53,7 @@ export default function LoginForm() {
                 setSuccess("Log In successful!")
                 setEmail("");
                 setPassword("");
-                window.location.href = "/dashboard";
+                window.location.href = "/feed";
             }
 
         }catch(err){
@@ -95,6 +110,15 @@ export default function LoginForm() {
                         onClick={() => window.location.href = "/resetRequest"}
                 >
                     Forgot Password?
+                </button>
+            </div>
+
+            <div className="text-black mt-3 width flex justify-center">
+                <button className="text-black hover:text-blue-800 hover:underline cursor-pointer"
+
+                        onClick={() => window.location.href = "/register"}
+                >
+                    Don't have an account yet? Register now!
                 </button>
             </div>
 

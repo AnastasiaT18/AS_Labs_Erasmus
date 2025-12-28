@@ -1,9 +1,16 @@
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
+import * as fs from "node:fs";
 
 
 
 async function initDB() {
+    // Delete existing database
+    if (fs.existsSync("./users.db")) {
+        fs.unlinkSync("./users.db");
+        console.log("Existing DB deleted");
+    }
+
     const db = await open({
         filename: "./users.db", // this will create users.db
         driver: sqlite3.Database,
@@ -18,7 +25,8 @@ async function initDB() {
       password_hash TEXT NOT NULL,
       activation_token TEXT,
       is_active BOOLEAN DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      role TEXT NOT NULL DEFAULT 'user'
     );
   `);
 
@@ -44,6 +52,32 @@ async function initDB() {
         used INTEGER DEFAULT 0,
         FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 )
+`);
+
+    await db.run(`
+    CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        content TEXT NOT NULL,
+        image_path TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME,
+        is_deleted INTEGER DEFAULT 0,
+        FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+`);
+
+    await db.run(`
+    CREATE TABLE IF NOT EXISTS comments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        post_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        content TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        is_deleted INTEGER DEFAULT 0,
+        FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+        FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE
+        )
 `);
 
     console.log("DB initialized");

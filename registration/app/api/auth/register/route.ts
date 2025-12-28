@@ -64,7 +64,7 @@ export async function POST(req: Request) {
         console.log("User inserted, token generated.");
 
         // Activation link
-        const activationLink = `http://localhost:3000/api/activate?token=${activationToken}`;
+        const activationLink = `http://localhost:3000/api/auth/activate?token=${activationToken}`;
         console.log("Email is being sent...");
 
         console.log(process.env.EMAIL_USER)

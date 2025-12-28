@@ -11,8 +11,22 @@ export default function ResetRequestForm() {
     const [loading, setLoading] = useState(false);
 
 
+    const validate = () => {
+        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return "Invalid email.";
+
+        return null;
+    };
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+
+        const validation = validate();
+        if (validation) {
+            setError(validation);
+            setSuccess(null);
+            console.log(error);
+            return;
+        }
 
         setLoading(true);
         setError(null);
@@ -20,12 +34,11 @@ export default function ResetRequestForm() {
 
         try{
 
-            const res = await fetch("/api/resetRequest", {
+            const res = await fetch("/api/auth/resetRequest", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({email})
             });
-
 
             const data = await res.json();
             console.log(data);
@@ -37,6 +50,7 @@ export default function ResetRequestForm() {
                 setEmail("");
             }
         }catch(err){
+            console.log(err);
             setError("Network error: " + err);
         }
 

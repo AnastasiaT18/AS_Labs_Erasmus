@@ -8,7 +8,7 @@ import {useSearchParams} from "next/navigation";
 export default function ResetPassForm() {
 
     const searchParams = useSearchParams();
-    const token = searchParams.get("token"); // 👈 token from URL
+    const token = searchParams.get("token");
 
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -47,7 +47,7 @@ export default function ResetPassForm() {
         try{
             //only after validation AND PASS = PASS CONF
 
-            const res = await fetch("/api/resetPassword", {
+            const res = await fetch("/api/auth/resetPassword", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({token, password})
@@ -82,7 +82,7 @@ export default function ResetPassForm() {
                     className="w-full p-3 border rounded-lg focus:ring-2 mb-4 text-gray-700"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="example@mail.com"
+                    placeholder="Password"
                 />
             </div>
 
@@ -94,13 +94,13 @@ export default function ResetPassForm() {
                     className="w-full p-3 border rounded-lg focus:ring-2 mb-4 text-gray-700"
                     value={passwordConfirm}
                     onChange={(e) => setPasswordConfirm(e.target.value)}
-                    placeholder="example@mail.com"
+                    placeholder="Password Confirmation"
                 />
             </div>
 
 
             {error && <p className="text-red-600 text-sm">{error}</p>}
-            {success && <p className="text-green-600 text-sm">{success}</p>}
+            {/*{success && <p className="text-green-600 text-sm">{success}</p>}*/}
 
 
             <button
@@ -116,7 +116,8 @@ export default function ResetPassForm() {
                     {success}
                     <button
                         onClick={() => window.location.href = "/login"}
-                        className="ml-2 underline text-blue-600"
+                        className=" hover:text-blue-800 hover:underline cursor-pointer"
+
                     >
                         Go to Login
                     </button>

@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {getDB} from "@/db";
 import bcrypt from "bcryptjs";
-import {getToken} from "@/app/api/register/token";
+import {getToken} from "@/app/api/auth/register/token";
 
 
 function validateUserInput(email: string, password: string) {
@@ -82,7 +82,7 @@ export async function POST(req: Request){
 
         response.cookies.set("session", sessionToken, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             maxAge: 60 * 60, // 1 hour
             path: "/",
