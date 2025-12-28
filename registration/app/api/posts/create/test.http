@@ -1,7 +1,0 @@
-POST http://localhost:3000/api/posts/create
-Content-Type: application/json
-
-{
-  "email": "anastasia.tiganescu@isa.utm.md",
-  "password": "Test1234!"
-}

@@ -3,6 +3,7 @@
 import {useEffect, useState} from "react";
 import CreateCommentForm from "@/app/components/CreateCommentForm";
 import CommentsFeed from "@/app/components/CommentsFeed";
+import SearchBar from "@/app/components/SearchBar";
 
 type Post = {
     id: number;
@@ -21,8 +22,12 @@ export default function PostsFeed({ user }: Props) {
 
     const [posts, setPosts] = useState<Post[]>([]);
 
-    async function loadPosts() {
-        const res = await fetch("/api/posts/list");
+    async function loadPosts(query?: string) {
+        const url = query
+            ? `/api/posts/search?q=${encodeURIComponent(query)}`
+            : "/api/posts/list";
+
+        const res = await fetch(url);
         const posts = await res.json();
 
         if (Array.isArray(posts)) {
@@ -70,6 +75,16 @@ export default function PostsFeed({ user }: Props) {
 
     return (
         <div className="space-y-6">
+            {/* SEARCH BAR */}
+            <SearchBar onSearch={loadPosts} />
+
+            {/* EMPTY STATE */}
+            {posts.length === 0 && (
+                <div className="text-center text-gray-500 py-10">
+                    No posts found.
+                </div>
+            )}
+
             {posts.map((post) => (
                 <div
                     key={post.id}
