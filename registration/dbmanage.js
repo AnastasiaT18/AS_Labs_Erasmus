@@ -146,6 +146,23 @@ export async function viewComments() {
     }
 }
 
+//VIEW LIKES
+export async function viewLikes() {
+    const db = await getDB();
+    try {
+        const sessions = await db.all(
+            "SELECT * FROM post_likes"
+        );
+        console.table(sessions);
+        return sessions;
+    } catch (err) {
+        console.error(" Error fetching likes:", err);
+    } finally {
+        await db.close();
+        console.log(" DB closed");
+    }
+}
+
 // Delete all comments
 export async function deleteAllComments() {
     const db = await getDB();
@@ -214,6 +231,8 @@ export async function deleteAdmin() {
     await viewPosts();
 
     await viewComments();
+
+    await viewLikes();
 
     // await deleteAllUsers();
     // await deleteAllSessions()

@@ -7,16 +7,19 @@ export async function GET(req: Request){
 
     try {
         const posts = await db.all(`
-            SELECT 
+            SELECT
                 posts.id,
                 posts.content,
                 posts.image_path,
                 posts.created_at,
                 users.id AS author_id,
-                users.name AS author_name
+                users.name AS author_name,
+                COUNT(post_likes.id) AS likes_count
             FROM posts
-            JOIN users ON users.id = posts.user_id
+                     JOIN users ON users.id = posts.user_id
+                     LEFT JOIN post_likes ON post_likes.post_id = posts.id
             WHERE posts.is_deleted = 0
+            GROUP BY posts.id
             ORDER BY posts.created_at DESC
         `);
         return NextResponse.json(posts);

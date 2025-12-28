@@ -10,6 +10,7 @@ type Post = {
     image_path: string | null;
     author_name: string;
     created_at: string;
+    likes_count: number;
 };
 
 type Props = {
@@ -23,7 +24,13 @@ export default function PostsFeed({ user }: Props) {
     async function loadPosts() {
         const res = await fetch("/api/posts/list");
         const posts = await res.json();
-        setPosts(posts);
+
+        if (Array.isArray(posts)) {
+            setPosts(posts);
+        } else {
+            console.warn("Posts API returned non-array:", posts);
+            setPosts([]);
+        }
     }
 
     async function deletePost(id: number) {
@@ -42,6 +49,17 @@ export default function PostsFeed({ user }: Props) {
         } else {
             const data = await res.json();
             alert(data.error || "Failed to delete post.");
+        }
+    }
+
+    async function likePost(id: number) {
+        const res = await fetch("/api/likes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ postId: id }),
+            });
+        if (res.ok) {
+            loadPosts();
         }
     }
 
@@ -78,6 +96,22 @@ export default function PostsFeed({ user }: Props) {
                             className="w-full rounded-lg object-cover max-h-80"
                         />
                     )}
+
+                    <div>
+                        {user ? ( <button
+                            onClick={() => likePost(post.id)}
+                            className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-500 transition"
+                        >
+                            ❤️{post.likes_count}
+                        </button>)
+                        : (
+                                <span>❤️</span>
+                            )}
+                        <span>{post.likes_count}</span>
+                    </div>
+
+
+
 
                     {/* Comments */}
                     <CommentsFeed postId={post.id} user={user}/>
