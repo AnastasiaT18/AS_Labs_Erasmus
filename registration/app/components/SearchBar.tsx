@@ -13,11 +13,12 @@ export default function SearchBar({onSearch,}: {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search posts..."
-                className="flex-1 p-2 border rounded"
+                className="w-full p-3 border-1 border-gray-300 rounded-lg text-black focus:bg-white"
+
             />
             <button
                 onClick={() => onSearch(q)}
-                className="px-4 py-2 bg-blue-600 text-white rounded"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none"
             >
                 Search
             </button>

@@ -88,16 +88,14 @@ export default function PostsFeed({ user }: Props) {
             {posts.map((post) => (
                 <div
                     key={post.id}
-                    className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
+                    className="bg-white p-4 rounded-lg border border-gray-200 "
                 >
                     {/* Author and timestamp */}
                     <div className="flex justify-between items-center mb-2">
-                        <span className="font-semibold text-gray-800">
-                          {post.author_name}
-                        </span>
+                        <span className="font-semibold text-gray-800">{post.author_name}</span>
                         <span className="text-xs text-gray-500">
-                          {new Date(post.created_at).toLocaleString()}
-                        </span>
+              {new Date(post.created_at).toLocaleString()}
+            </span>
                     </div>
 
                     {/* Content */}
@@ -108,41 +106,39 @@ export default function PostsFeed({ user }: Props) {
                         <img
                             src={post.image_path}
                             alt="post"
-                            className="w-full rounded-lg object-cover max-h-80"
+                            className="w-full rounded-lg object-cover max-h-80 mb-2 border-1"
                         />
                     )}
 
-                    <div>
-                        {user ? ( <button
-                            onClick={() => likePost(post.id)}
-                            className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-500 transition"
-                        >
-                            ❤️{post.likes_count}
-                        </button>)
-                        : (
-                                <span>❤️{post.likes_count}</span>
-                            )}
+                    {/* Likes */}
+                    <div className="mb-2">
+                        {user ? (
+                            <button
+                                onClick={() => likePost(post.id)}
+                                className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-500 transition"
+                            >
+                                ❤️ {post.likes_count}
+                            </button>
+                        ) : (
+                            <span>❤️ {post.likes_count}</span>
+                        )}
                     </div>
 
-
-
-
                     {/* Comments */}
-                    <CommentsFeed postId={post.id} user={user}/>
+                    <CommentsFeed postId={post.id} user={user} />
 
                     {/* Comment form */}
-                    {user && <CreateCommentForm postId={post.id}/>}
+                    {user && <CreateCommentForm postId={post.id} />}
 
-
-                    {/* Other buttons (including delete) */}
+                    {/* Delete button */}
                     {(user?.role === "admin" || user?.name === post.author_name) && (
                         <button
-                            type="submit"
                             onClick={() => deletePost(post.id)}
-                            className="bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition font-medium"
+                            className="mt-2 px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition"
                         >
                             Delete
-                        </button>)}
+                        </button>
+                    )}
                 </div>
             ))}
         </div>

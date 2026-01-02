@@ -44,14 +44,14 @@ export default function CreateCommentForm({ postId }: Props) {
                 required
                 className="w-full resize-none rounded-lg border border-gray-300 p-2 text-sm
                            focus:outline-none focus:ring-2 focus:ring-blue-400
-                           placeholder:text-gray-400"
+                           placeholder:text-gray-400 text-black"
                 rows={3}
             />
 
             <div className="flex justify-end">
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white text-sm px-4 py-1.5 rounded-full
+                    className="bg-blue-600 text-white text-sm px-4 py-1.5 rounded-lg
                                hover:bg-blue-700 transition font-medium"
                 >
                     Post
