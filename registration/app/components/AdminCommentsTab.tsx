@@ -11,11 +11,28 @@ type Comment = {
 
 export default function AdminCommentsTab() {
     const [comments, setComments] = useState<Comment[]>([]);
+    const [error, setError] = useState<string | null>(null);
+
 
     async function loadComments() {
-        const res = await fetch("/api/comments/list?all=true"); // maybe add ?all=true to get all comments
-        const data = await res.json();
-        setComments(Array.isArray(data) ? data : []);
+        try {
+            setError(null);
+
+            const res = await fetch("/api/comments/list?all=true");
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError(data.message || "Failed to load comments");
+                setComments([]);
+                return;
+            }
+
+            setComments(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error("Network error:", err);
+            setError("Network error while loading comments");
+        }
     }
 
     async function deleteComment(id: number) {
@@ -34,6 +51,14 @@ export default function AdminCommentsTab() {
     }, []);
 
     return (
+
+        <>
+        {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded">
+                {error}
+            </div>
+        )}
+
         <table className="w-full text-left border">
             <thead>
             <tr className="bg-gray-100">
@@ -63,5 +88,7 @@ export default function AdminCommentsTab() {
             ))}
             </tbody>
         </table>
+        </>
     );
+
 }

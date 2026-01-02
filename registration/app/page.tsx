@@ -6,14 +6,11 @@ export default async function HomePage() {
     const user = await getAuthenticatedUser();
 
     if (!user) {
-        redirect("/feed");
+        console.log("not admin");
+        redirect("/feed"); // guest → feed
+    } else if (user.role === "admin") {
+        redirect("/admin"); // admin → admin panel
+    } else {
+        redirect("/feed"); // regular user → feed
     }
-
-    if (user.role === "admin") {
-        redirect("/admin");
-    }
-
-    redirect("/feed/");
-
-
 }

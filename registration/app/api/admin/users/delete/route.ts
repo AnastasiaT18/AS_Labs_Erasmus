@@ -16,6 +16,16 @@ export async function DELETE(req: Request){
 
     const db = await getDB();
 
+    if (user.id === userId){
+        return NextResponse.json(
+            {
+                error: "SELF_DELETE_FORBIDDEN",
+                message: "Administrators cannot delete their own account.",
+            },
+            { status: 400 }
+        );
+    }
+
     try {
         await db.run("DELETE FROM users WHERE id = ?", [userId]);
         return NextResponse.json({ success: true });

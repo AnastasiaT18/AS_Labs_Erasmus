@@ -2,9 +2,19 @@ import { getAuthenticatedUser } from "@/app/lib/auth";
 import PostsFeed from "@/app/feed/PostsFeed";
 import CreatePost from "@/app/feed/CreatePost";
 import LogoutButton from "@/app/logout/LogoutButton";
+import {redirect} from "next/navigation";
 
 export default async function FeedPage() {
     const user = await getAuthenticatedUser();
+
+
+    if (!user) {
+        console.log("not any user");
+    } else if (user.role === "admin") {
+        redirect("/admin"); // admin → admin panel
+    } else{
+        console.log("Server FeedPage user:", user.role);
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">

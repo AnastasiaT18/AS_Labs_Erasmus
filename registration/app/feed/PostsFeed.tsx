@@ -120,9 +120,8 @@ export default function PostsFeed({ user }: Props) {
                             ❤️{post.likes_count}
                         </button>)
                         : (
-                                <span>❤️</span>
+                                <span>❤️{post.likes_count}</span>
                             )}
-                        <span>{post.likes_count}</span>
                     </div>
 
 

@@ -22,15 +22,20 @@ export default function AdminPostsTab() {
         setLoading(false);
     }
 
-    async function deletePost(userId: number) {
-        if (!confirm("Delete this user?")) return;
+    async function deletePost(postId: number) {
+        if (!confirm("Delete this post?")) return;
         const res = await fetch("/api/posts/delete", {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId }),
+            body: JSON.stringify({ postId }),
         });
-        if (res.ok) loadPosts();
-        else alert("Failed to delete user");
+        if (!res.ok) {
+            const err = await res.json();
+            alert(err.message || err.error || "Failed to delete post");
+            return;
+        }
+        loadPosts();
+
     }
 
     useEffect(() => {

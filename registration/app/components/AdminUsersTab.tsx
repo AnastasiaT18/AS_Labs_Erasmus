@@ -28,8 +28,12 @@ export default function AdminUsersTab() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId }),
         });
+
+        const data = await res.json();
+
         if (res.ok) loadUsers();
-        else alert("Failed to delete user");
+        else alert(data.message);
+
     }
 
     useEffect(() => {
