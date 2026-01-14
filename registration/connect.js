@@ -1,20 +1,23 @@
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import * as fs from "node:fs";
+import path from "path";
 
 
+const DATA_DIR = "./data";
+const DB_PATH = path.join(DATA_DIR, "users.db");
 
 async function initDB() {
     // Delete existing database
-    if (fs.existsSync("./users.db")) {
-        fs.unlinkSync("./users.db");
-        console.log("Existing DB deleted");
+    if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
     }
 
     const db = await open({
-        filename: "./users.db", // this will create users.db
+        filename: DB_PATH,
         driver: sqlite3.Database,
     });
+
 
     // Create the Users table if it doesn't exist
     await db.run(`

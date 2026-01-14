@@ -3,11 +3,13 @@ import sqlite3 from "sqlite3";
 
 // Path to your DB (same as in initDB)
 const dbPath = "./users.db"; // assuming this file is also in the registration folder
+const DB_PATH = "./data/users.db";
+
 
 export async function getDB() {
     try {
         const db = await open({
-            filename: dbPath,
+            filename: DB_PATH,
             driver: sqlite3.Database,
         });
 

@@ -1,4 +1,8 @@
+"use client";
+
 import ResetPassForm from "./ResetPassForm";
+
+export const dynamic = "force-dynamic"; // <- Add this line
 
 export default function Page() {
     return (
