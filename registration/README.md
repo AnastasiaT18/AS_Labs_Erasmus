@@ -18,8 +18,29 @@ You can run it locally on your machine using Node.js.
 
 1. **Download or clone the repo**
 
+2. **Environment Variables Setup:**
+   Before running the application, you must create your own .env file in the registration folder.
+   Steps:
+   1. Inside the `registration` folder, create a file named `.env`
+   2. Add the following variables **with your own values**:
 
-2. **Install dependencies**
+```env
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_google_app_password
+
+ADMIN_EMAIL=admin_email@example.com
+ADMIN_PASSWORD=admin_password
+ADMIN_NAME=Admin
+```
+   Explanation:
+   
+         1. EMAIL_USER, EMAIL_PASS → Required for the email functionality (e.g. password reset). EMAIL_PASS must be a Google App Password, not your normal Gmail password. If you want to use my mock data, contact me.
+         2. ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME → Optional. These variables are only required if you want to automatically create an admin user in the database via dbmanage.js. If you do not need an admin account, these variables can be omitted.
+
+      ⚠️ Do not commit the .env file to the repository. It should be listed in .gitignore.
+
+
+3. **Install dependencies**
 
    From the `registration` folder:
 
@@ -28,7 +49,7 @@ You can run it locally on your machine using Node.js.
    ```
 
 
-3. **Run the development server**
+4. **Run the development server**
 
    From the `registration` folder:
 
